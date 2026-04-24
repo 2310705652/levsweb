@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>levs2310</title>
+  <meta name="description" content="嵌入式软硬件、具身智能算法、机器人开发">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      line-height: 1.5;
+      color: #0f172a;
+      background-color: #1a1a2e;
+      overflow-x: hidden;
+    }
+
+    .comic-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -2;
+    }
+    .bg-layer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-position: center;
+      background-size: cover;
+      transition: none;
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 0.8rem 2rem;
+      background: rgba(255, 255, 255, 0);
+      backdrop-filter: blur(0);
+      z-index: 1000;
+      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    nav.scrolled {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+    }
+    .nav-container {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .nav-logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #1e293b, #2563eb);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-link {
+      text-decoration: none;
+      font-weight: 600;
+      color: #334155;
+      padding: 0.4rem 0;
+      position: relative;
+      transition: 0.2s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 2.5px;
+      background: linear-gradient(90deg, #f97316, #2563eb);
+      transition: width 0.25s ease;
+      border-radius: 2px;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: #0f172a;
+    }
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 6rem 2rem;
+      text-align: center;
+    }
+    .avatar {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      border: 4px solid rgba(255,255,240,0.9);
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.25);
+      transition: transform 0.4s ease;
+      margin-bottom: 1.5rem;
+      object-fit: cover;
+      background: #fff;
+    }
+    .avatar:hover {
+      transform: scale(1.02) rotate(2deg);
+    }
+.hero-title {
+  font-size: clamp(2.8rem, 8vw, 5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #ffffff !important;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease;
+}
+    .hero-subtitle {
+      font-size: 1.3rem;
+      font-weight: 500;
+      color: #f1f5f9;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(8px);
+      display: inline-block;
+      padding: 0.3rem 1.2rem;
+      border-radius: 60px;
+      margin-bottom: 1.8rem;
+    }
+    .skills-tags {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .skill-tag {
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(12px);
+      padding: 6px 20px;
+      border-radius: 40px;
+      color: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: 0.2s;
+    }
+
+    .section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem;
+    }
+    .section-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      background: linear-gradient(120deg, #f8fafc, #e2e8f0);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-block;
+      border-left: 5px solid #f97316;
+      padding-left: 1rem;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .edu-card {
+      background: rgba(15, 23, 42, 0.5);
+      backdrop-filter: blur(16px);
+      border-radius: 28px;
+      padding: 1.4rem 2rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .edu-item {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .edu-label {
+      font-weight: 700;
+      font-size: 1.1rem;
+      min-width: 80px;
+      color: #f1f5f9;
+    }
+    .edu-value {
+      color: #cbd5e1;
+      font-size: 1rem;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+    .card {
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(16px);
+      border-radius: 28px;
+      overflow: hidden;
+      transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.25);
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(40px);
+      will-change: transform, opacity;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .card:hover {
+      transform: translateY(-8px) scale(1.01);
+      box-shadow: 0 20px 32px -12px rgba(0, 0, 0, 0.35);
+      background: rgba(15, 23, 42, 0.7);
+      border-color: rgba(255,255,255,0.4);
+    }
+    .card-image {
+      height: 320px;
+      overflow: hidden;
+      position: relative;
+    }
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+    .card:hover .card-image img {
+      transform: scale(1.08);
+    }
+    .card-content {
+      padding: 1.4rem;
+    }
+    .card-tags {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.7rem;
+      flex-wrap: wrap;
+    }
+    .tag {
+      padding: 4px 12px;
+      border-radius: 50px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .tag-orange {
+      background: rgba(249, 115, 22, 0.2);
+      color: #fbbf24;
+    }
+    .tag-purple {
+      background: rgba(139, 92, 246, 0.2);
+      color: #c4b5fd;
+    }
+    .card-title {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #f1f5f9;
+    }
+    .card-desc {
+      color: #cbd5e1;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .divider {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #f97316, #2563eb, #8b5cf6, transparent);
+      width: 70%;
+      margin: 1rem auto;
+      border-radius: 4px;
+    }
+
+    .bottom-section {
+      max-width: 1200px;
+      margin: 2rem auto 4rem;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    .resume, .contact {
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(16px);
+      border-radius: 32px;
+      padding: 1.8rem;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,240,0.2);
+    }
+    .resume .section-title, .contact .section-title {
+      font-size: 1.6rem;
+    }
+    .resume-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+    .btn {
+      background: linear-gradient(105deg, #2563eb, #1e40af);
+      border: none;
+      padding: 0.7rem 1.6rem;
+      border-radius: 40px;
+      color: white;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .btn:hover {
+      transform: scale(1.02);
+      background: linear-gradient(105deg, #3b82f6, #1d4ed8);
+      box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.25);
+    }
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .contact-icon {
+      width: 26px;
+      height: 26px;
+      filter: brightness(0) invert(1);
+      opacity: 0.8;
+    }
+    .contact-label {
+      font-weight: 700;
+      color: #e2e8f0;
+      min-width: 70px;
+    }
+    .contact-value {
+      color: #cbd5e1;
+      word-break: break-all;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal {
+      background: #1e293b;
+      border-radius: 24px;
+      padding: 2rem;
+      max-width: 850px;
+      width: 90%;
+      max-height: 85vh;
+      overflow-y: auto;
+      transform: scale(0.95);
+      opacity: 0;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .modal-overlay.active .modal {
+      transform: scale(1);
+      opacity: 1;
+    }
+    .modal-close {
+      position: absolute;
+      top: 1rem; right: 1.2rem;
+      font-size: 1.8rem;
+      background: none; border: none;
+      cursor: pointer;
+      color: #94a3b8;
+    }
+    .modal h2 {
+      color: #f1f5f9;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+    .modal p {
+      color: #cbd5e1;
+      line-height: 1.7;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .footer-stat {
+      text-align: center;
+      padding: 1.8rem;
+      color: #94a3b8;
+      font-size: 0.8rem;
+      background: rgba(0,0,0,0.3);
+      backdrop-filter: blur(6px);
+      margin-top: 1rem;
+    }
+
+    @media (max-width: 750px) {
+      .bottom-section { grid-template-columns: 1fr; }
+      .nav-links { gap: 1rem; }
+      .hero-title { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="comic-bg">
+  <div class="bg-layer" id="bgLayer1" style="background-image: url('images/161.webp')"></div>
+  <div class="bg-layer" id="bgLayer2" style="background-image: url('images/228.webp')"></div>
+  <div class="bg-layer" id="bgLayer3" style="background-image: url('images/015.webp')"></div>
+</div>
+
+<div class="content-wrapper">
+  <nav id="navbar">
+    <div class="nav-container">
+      <ul class="nav-links">
+        <li><a href="#hero" class="nav-link active">主页</a></li>
+        <li><a href="#education" class="nav-link">教育</a></li>
+        <li><a href="#projects" class="nav-link">项目</a></li>
+        <li><a href="#internship" class="nav-link">实习</a></li>
+        <li><a href="#bottom" class="nav-link">联系</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <section class="hero" id="hero">
+  <img class="avatar" src="p.jpg" alt="李博头像" width="170" height="170" onerror="this.src='https://via.placeholder.com/170/2563eb/ffffff?text=LB'">
+    <h1 class="hero-title" id="heroTitle">levs2310</h1>
+    <p class="hero-subtitle">嵌入式软硬件 / 具身智能算法/ 机器人开发</p>
+    <div class="skills-tags">
+      <span class="skill-tag">单片机</span>
+      <span class="skill-tag">RTOS</span>
+      <span class="skill-tag">PID</span>
+      <span class="skill-tag">Python</span>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+<section class="section" id="education">
+  <h2 class="section-title">教育背景</h2>
+  <div class="edu-card">
+    <div class="edu-item">
+      <span class="edu-label">本科：</span>
+      <span class="edu-value" style="width: 180px; display: inline-block;">丽水学院</span>
+      <span class="edu-value" style="width: 140px; display: inline-block;">自动化</span>
+      <span class="edu-value">2022.09 – 2026.06</span>
+    </div>
+    <div class="edu-item">
+      <span class="edu-label">硕士：</span>
+      <span class="edu-value" style="width: 180px; display: inline-block;">上海理工大学</span>
+      <span class="edu-value" style="width: 140px; display: inline-block;">控制工程</span>
+      <span class="edu-value">2026.09</span>
+    </div>
+  </div>
+</section>
+
+  <div class="divider"></div>
+
+<section class="section" id="projects">
+  <h2 class="section-title">我的项目</h2>
+  <div class="cards-grid">
+
+    <div class="card" onclick="openModal(1)">
+      <div class="card-image">
+        <img src="images/xm1.jpeg" alt="二维云台控制系统" loading="lazy" onerror="this.src='https://via.placeholder.com/600x400/2563eb/ffffff?text=云台项目'">
+      </div>
+      <div class="card-content">
+        <div class="card-tags"><span class="tag tag-orange">STM32</span><span class="tag tag-purple">步进电机</span></div>
+        <h3 class="card-title">二维云台控制系统</h3>
+        <p class="card-desc">点击查看详情</p>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal(2)">
+      <div class="card-image">
+        <img src="https://via.placeholder.com/600x400/10b981/ffffff?text=RTOS多传感器系统">
+      </div>
+      <div class="card-content">
+        <div class="card-tags"><span class="tag tag-orange">FreeRTOS</span><span class="tag tag-purple">      </span></div>
+        <h3 class="card-title">RTOS多传感器系统</h3>
+        <p class="card-desc">点击查看详情</p>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal(3)">
+      <div class="card-image">
+        <img src="C:\Users\lbbbb\Desktop\简历网页版\图片/tp.png" alt="欠驱动灵巧手设计">
+      </div>
+      <div class="card-content">
+        <div class="card-tags"><span class="tag tag-orange">结构设计</span><span class="tag tag-purple">3d打印</span></div>
+        <h3 class="card-title">欠驱动灵巧手设计</h3>
+        <p class="card-desc">点击查看详情</p>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal(4)">
+      <div class="card-image">
+        <img src="https://via.placeholder.com/600x400/f97316/ffffff?text=个人展示网页">
+      </div>
+      <div class="card-content">
+        <div class="card-tags"><span class="tag tag-orange">html</span><span class="tag tag-purple">前端</span></div>
+        <h3 class="card-title">个人网页制作</h3>
+        <p class="card-desc">点击查看详情</p>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal(5)">
+      <div class="card-image">
+        <img src="https://via.placeholder.com/600x400/8b5cf6/ffffff?text=ESP32CAM摄像">
+      </div>
+      <div class="card-content">
+        <div class="card-tags"><span class="tag tag-orange">ESP32</span><span class="tag tag-purple">实时预览</span></div>
+        <h3 class="card-title">ESP32CAM实时预览</h3>
+        <p class="card-desc">点击查看详情</p>
+      </div>
+    </div>
+
+    <div class="card" onclick="openModal(6)">
+      <div class="card-image">
+        <img src="https://via.placeholder.com/600x400/8b5cf6/ffffff?text=Python开发">
+      </div>
+      <div class="card-content">
+        <div class="card-tags"><span class="tag tag-orange">脚本</span><span class="tag tag-purple">自动化处理</span></div>
+        <h3 class="card-title">Python开发</h3>
+        <p class="card-desc">点击查看详情</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 独立项目弹窗 1~6 -->
+<div class="modal-overlay" id="modal1">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAllModals()">&times;</button>
+    <h2>📌 二维云台控制系统</h2>
+    <p>基于STM32F103C8T6主控完成发射端与云台端全外设适配：发射端实现MPU6050姿态采集、OLED显示、ADC摇杆采集、按键菜单及ESP01S的TCP无线透传；云台端实现双A4988驱动42步进电机与速度/角度控制、HCSR04超声测距及激光模块控制，同步完成上位机通信与数据可视化联调。</p>
+    <p>自主编写软件I2C驱动，完成MPU6050六轴传感器寄存器配置与数据采集，配置定时器PWM实现双步进电机驱动；针对传感器噪声与漂移问题，移植并优化卡尔曼滤波算法，融合加速度计与陀螺仪数据，降噪抑抖并修正姿态误差，为双轴PID闭环控制提供高精度反馈。</p>
+    <p>搭建双轴独立PID控制系统，精细整定P/I/D参数及各类限幅，设计陀螺仪/摇杆双模式，通过ADC采集摇杆电位器电压，利用map()函数映射为步进电机角度（0~180°）实现手动操控，最终实现激光启停、实时测距上传等功能，确保云台角度控制误差＜1°、无线通信延迟＜100ms，完成软硬件一体化落地且运行稳定。</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal2">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAllModals()">&times;</button>
+    <h2>📌 RTOS多传感器系统（独立详情）</h2>
+    <p>基于STM32F407ZGT6主控移植 FreeRTOS 实时操作系统，合理规划 7 级差异化优先级任务，搭建多任务协同调度架构。采用互斥锁完成 I2C、ADC 硬件资源隔离，彻底解决多传感器并发访问冲突；独立完成 MPU6050、VL53L0X、HCSR04、LM393、OLED、蜂鸣器等全系列外设底层驱动开发与调试。</p>
+    <p>熟练运用 C 语言及 I2C/ADC/TIM/USART 外设协议，结合 FreeRTOS 任务同步、消息队列机制，实现惯性姿态解算、双路测距采集、光敏数据检测与多传感器数据融合处理。设计串口定制数据帧协议，搭载 OLED 分页显示、蜂鸣器分级报警功能，搭建上位机实时数据监控链路，保障系统高实时性与稳定性。</p>
+    <p>方案可直接落地于姿态检测、环境监测等嵌入式应用场景，多任务运行稳定、无资源冲突、数据采集实时可靠。</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal3">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAllModals()">&times;</button>
+    <h2>📌 欠驱动灵巧手设计</h2>
+    <p>采用欠驱动机械结构设计，仅用少量电机即可实现五指自适应抓取。使用 N30 减速电机 + 伞齿轮传动，3D 打印一体化外壳，结构轻量化、成本极低。</p>
+    <p>可实现物体自适应包裹抓取、手势复现、力度控制，适用于机器人末端执行器、康复机械手、科研教学平台。</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal4">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAllModals()">&times;</button>
+    <h2>📌 个人网页制作</h2>
+    <p>纯手写 HTML + CSS + JS 开发响应式作品集网页，实现视差滚动背景、卡片渐入动画、导航栏滚动效果、独立项目弹窗、简历预览等功能。</p>
+    <p>支持电脑、手机、平板自适应，界面现代简洁，交互流畅，可用于展示个人项目、技术能力、求职简历。</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal5">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAllModals()">&times;</button>
+    <h2>📌 ESP32CAM实时图像传输</h2>
+    <p>基于 ESP32CAM 模块搭建 WiFi 图传系统，实现局域网内网页实时画面预览，支持拍照保存至 SD 卡、录像功能。</p>
+    <p>可作为无线摄像头、家庭监控、小车第一视角图传、简易行车记录仪使用。功耗低、体积小、稳定性高。</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal6">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAllModals()">&times;</button>
+    <h2>📌 Python开发</h2>
+    <p>使用 Python 实现串口调试工具、数据解析脚本、自动化测试框架、上位机界面。可与嵌入式设备双向通信，实时读取传感器数据、发送控制指令、生成日志报表。</p>
+    <p>大幅提升嵌入式开发调试效率，适用于设备自动化测试、数据采集、上位机控制。</p>
+  </div>
+</div>
+
+<!-- 简历弹窗 -->
+<div class="modal-overlay" id="resumeModal">
+  <div class="modal" style="max-width: 1000px; width: 95%; height: 85vh; display: flex; flex-direction: column; padding:0;">
+    <button class="modal-close" onclick="document.getElementById('resumeModal').classList.remove('active')" style="z-index:10;margin:1rem;color:white;">&times;</button>
+    <iframe id="resumeIframe" style="flex:1; width:100%; border:none; border-radius:24px;" src="resume.pdf#toolbar=0"></iframe>
+  </div>
+</div>
+
+  <div class="divider"></div>
+
+  <!-- 实习经历 -->
+  <section class="section" id="internship">
+    <h2 class="section-title">实习经历</h2>
+    <div class="cards-grid">
+      <div class="card" onclick="openModal(7)">
+        <div class="card-image">
+<img src="images/sx1.webp" alt="江波龙实习现场" loading="lazy" onerror="this.src='https://via.placeholder.com/600x600/1d4ed8/ffffff?text=实习工作'">
+        </div>
+        <div class="card-content">
+          <div class="card-tags"><span class="tag tag-orange">嵌入式测试</span><span class="tag tag-purple">存储芯片</span></div>
+          <h3 class="card-title">嵌入式硬件测试</h3>
+          <p class="card-desc">负责嵌入式硬件测试与自动化脚本开发，完成存储芯片驱动调试及产线通信可靠性优化。</p>
+        </div>
+      </div>
+      <div class="card" onclick="openModal(8)">
+        <div class="card-image">
+          <img src="https://via.placeholder.com/600x600/3b82f6/ffffff?text=调试工具链" alt="调试环境">
+        </div>
+        <div class="card-content">
+          <div class="card-tags"><span class="tag tag-orange"> </span><span class="tag tag-purple"> </span></div>
+          <h3 class="card-title">更多经历探索中</h3>
+          <p class="card-desc">持续学习与实践中，不断积累项目与工程经验。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 实习独立弹窗 7~8 -->
+<div class="modal-overlay" id="modal7">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAllModals()">&times;</button>
+    <h2>📌 嵌入式硬件测试 | 实习详情</h2>
+    <p>参与eMMC/UFS存储芯片与终端设备的兼容性测试，32GB-256GB容量、5类硬件平台，实测200+测试用例（安兔兔/FIO/高低温），通过自动化脚本分析数据，定位15+缺陷（如低温读速下降20%），推动产品稳定性提升25%，测试效率提高40%。</p>
+    <p>参与开发ADB自动化测试脚本，实现Linux/Android系统的批量命令执行、日志抓取与性能测试，优化测试流程，将手动测试转为自动化，效率提升60%，分析系统日志，定位异常并协助开发团队完成问题修复，掌握嵌入式测试全流程，熟练使用Shell/Python脚本及ADB调试工具。</p>
+    <p>根据业务场景设计性能测试用例，覆盖高并发、大数据量等关键场景，明确响应时间、吞吐量等性能指标。手动执行性能测试，监控系统资源占用（CPU、内存、I/O），分析瓶颈并优化，确保系统稳定性。</p>
+    <p>撰写详细的测试用例操作指导书，包括测试环境、步骤、预期结果及问题记录，提升团队测试效率。输出测试手册与故障指南，缩短团队后续项目周期30%。</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal8">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAllModals()">&times;</button>
+    <h2>📌 更多经历探索中</h2>
+    <p>目前仍在持续学习嵌入式开发、机器人控制、智能算法等方向。</p>
+    <p>积极参与项目实践与工程锻炼，未来将不断更新实习与工作经历。</p>
+    <p>持续提升工程能力与研发水平，向更专业的方向迈进。</p>
+  </div>
+</div>
+
+  <div class="divider"></div>
+
+  <section class="bottom-section" id="bottom">
+    <div class="resume">
+      <h2 class="section-title" style="border-left-color:#f97316;">个人简历</h2>
+      <div class="resume-buttons">
+        <button class="btn" onclick="document.getElementById('resumeModal').classList.add('active')">在线预览</button>
+        <button class="btn" onclick="const a=document.createElement('a');a.href='resume.pdf';a.download='李博-简历.pdf';a.click();">下载简历 (PDF)</button>
+      </div>
+    </div>
+    <div class="contact">
+      <h2 class="section-title" style="border-left-color:#8b5cf6;">联系方式</h2>
+      <div class="contact-item">
+        <svg class="contact-icon" viewBox="0 0 24 24" stroke-width="1.5"><path d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" stroke="currentColor"/></svg>
+        <span class="contact-label">邮箱：</span>
+        <span class="contact-value">2310705652@qq.com</span>
+      </div>
+      <div class="contact-item">
+        <svg class="contact-icon" viewBox="0 0 24 24"><path d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-1.5 15h.008v.008H12v-.008Z" stroke="currentColor"/></svg>
+        <span class="contact-label">电话/微信：</span>
+        <span class="contact-value">173 5782 7277</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="footer-stat">© 2026.4.24</div>
+
+  <script>
+    // 背景滚动渐变
+    const bg1 = document.getElementById('bgLayer1');
+    const bg2 = document.getElementById('bgLayer2');
+    const bg3 = document.getElementById('bgLayer3');
+    function updateBackground() {
+      const scrollTop = window.scrollY;
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const percent = scrollTop / scrollHeight;
+      let o1=0,o2=0,o3=0;
+      if (percent <= 0.33) { o1=1; o2=percent/0.33; o3=0; }
+      else if (percent <= 0.66) { o1=1-(percent-0.33)/0.33; o2=1; o3=(percent-0.33)/0.33; }
+      else { o1=0; o2=1-(percent-0.66)/0.34; o3=1; }
+      bg1.style.opacity=o1; bg2.style.opacity=o2; bg3.style.opacity=o3;
+    }
+    window.addEventListener('scroll',updateBackground); updateBackground();
+
+    // 导航栏
+    const navbar = document.getElementById("navbar");
+    window.addEventListener("scroll", ()=>{
+      if(window.scrollY>60) navbar.classList.add("scrolled");
+      else navbar.classList.remove("scrolled");
+    });
+
+    // 导航高亮
+    const sections = ['hero','education','projects','internship','bottom'];
+    const navLinks = document.querySelectorAll(".nav-link");
+    function setActiveLink(id){
+      navLinks.forEach(link=>{
+        let h=link.getAttribute("href").substring(1);
+        h===id?link.classList.add("active"):link.classList.remove("active");
+      });
+    }
+    navLinks.forEach(link=>{
+      link.addEventListener("click",e=>{
+        e.preventDefault();
+        const t=link.getAttribute("href").substring(1);
+        document.getElementById(t).scrollIntoView({behavior:"smooth"});
+        setActiveLink(t);
+      });
+    });
+    window.addEventListener("scroll",()=>{
+      let pos=window.scrollY+150;
+      let cur="";
+      sections.forEach(s=>{
+        const el=document.getElementById(s);
+        if(el&&el.offsetTop<=pos&&el.offsetTop+el.offsetHeight>pos)cur=s;
+      });
+      if(cur)setActiveLink(cur);
+    });
+
+    // 标题动画
+    const heroTitle=document.getElementById("heroTitle");
+    heroTitle.innerText="levs2310";
+    setTimeout(()=>{heroTitle.style.opacity="1";heroTitle.style.transform="translateY(0)";},100);
+
+    // 卡片入场
+    const cardObserver=new IntersectionObserver(es=>{
+      es.forEach(e=>e.isIntersecting&&(e.target.classList.add("visible"),cardObserver.unobserve(e.target)));
+    },{threshold:0.15});
+    document.querySelectorAll(".card").forEach(c=>cardObserver.observe(c));
+
+    // 多独立弹窗
+    function openModal(n){
+      closeAllModals();
+      document.getElementById(`modal${n}`).classList.add("active");
+    }
+    function closeAllModals(){
+      document.querySelectorAll(".modal-overlay").forEach(m=>m.classList.remove("active"));
+    }
+    document.addEventListener("keydown",e=>e.key==="Escape"&&closeAllModals());
+  </script>
+</div>
+</body>
+</html>
